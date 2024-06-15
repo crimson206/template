@@ -11,7 +11,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "\[name_space\]-\[module_name\]"
 version = "0.1.0"
-description = \[description\]
+description = "\[description\]"
 readme = "README.md"
 authors = [
   { name="\[name\]", email="\[email\]" },
