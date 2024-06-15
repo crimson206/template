@@ -14,4 +14,4 @@ ignore = E501, W605
 
 # E305: To add 
 per-file-ignores =
-    generate_toml.py: E305
+    generate_toml.py: E305, E302

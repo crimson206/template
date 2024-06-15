@@ -70,10 +70,31 @@ def create_skeleton(name_space, module_name):
         f.write("# Init file for the module")
 
 
-def hint_module_name(module_name):
-    os.environ["MODULE_NAME"] = module_name
-    print(f'Your module name is {module_name}.')
-    print('To access your module name in the terminal, use $MODULE_NAME.')
+setup_env_template = r'''\[bin_bash\]
+
+read -p "Please enter the Python version you want to use (e.g., 3.9): " PYTHON_VERSION
+
+conda create --name \[module_name\] python=$PYTHON_VERSION -y
+
+conda activate \[module_name\]
+
+pip install -r requirements.txt
+
+'''
+
+
+def generate_setup_env_script(module_name, setup_env_template):
+    with open("scripts/setup_env.sh", "w") as file:
+        script = format_insert(
+            setup_env_template,
+            module_name=module_name,
+            bin_bash="# !bin/bash"
+        )
+        file.write(script)
+
+    print(f"Now, you can access the module name {module_name} in your terminal by $MODULE_NAME")
+    print("To generate an conda env for your new module, run following command.")
+    print("source scripts/setup_env.sh")
 
 
 def generate_toml(pyproject_body):
@@ -93,9 +114,9 @@ options = Options(
 
 # Define the general information of your package
 kwargs = Kwargs(
-    name_space="crimson206",
-    module_name="None",
-    description="Write the module description.",
+    name_space="crimson",
+    module_name="code-extractor",
+    description="From source code, extract useful information.",
 )
 
 # endregion
@@ -119,13 +140,14 @@ generate_toml(
 )
 
 
-hint_module_name(
-    module_name=kwargs.module_name
-)
-
 create_skeleton(
     name_space=kwargs.name_space,
     module_name=kwargs.module_name
+)
+
+generate_setup_env_script(
+    module_name=kwargs.module_name, 
+    setup_env_template=setup_env_template
 )
 
 # endregion
