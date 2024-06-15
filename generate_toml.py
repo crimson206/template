@@ -1,6 +1,6 @@
 # region Pre-Defined
 
-
+import os
 from pydantic import BaseModel
 from crimson.templator import format_insert
 
@@ -60,6 +60,27 @@ def add_options(template: str, options: Options) -> str:
 
 # endregion
 
+# ******************************************************
+# region Utils
+
+
+def create_skeleton(name_space, module_name):
+    os.makedirs(f"src/{name_space}/{module_name}", exist_ok=True)
+    with open(f"src/{name_space}/{module_name}/__init__.py", "w") as f:
+        f.write("# Init file for the module")
+
+
+def hint_module_name(module_name):
+    os.environ["MODULE_NAME"] = module_name
+    print(f'Your module name is {module_name}.')
+    print('To access your module name in the terminal, use $MODULE_NAME.')
+
+
+def generate_toml(pyproject_body):
+    with open('pyproject.toml', "w") as file:
+        file.write(pyproject_body)
+
+# endregion
 
 # ******************************************************
 # region User Setup
@@ -72,9 +93,9 @@ options = Options(
 
 # Define the general information of your package
 kwargs = Kwargs(
-    name_space="None",
+    name_space="crimson206",
     module_name="None",
-    description="None",
+    description="Write the module description.",
 )
 
 # endregion
@@ -92,7 +113,19 @@ pyproject_body: str = format_insert(
     **kwargs.model_dump()
 )
 
-with open('pyproject.toml', "w") as file:
-    file.write(pyproject_body)
+
+generate_toml(
+    pyproject_body=pyproject_body
+)
+
+
+hint_module_name(
+    module_name=kwargs.module_name
+)
+
+create_skeleton(
+    name_space=kwargs.name_space,
+    module_name=kwargs.module_name
+)
 
 # endregion
