@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "{name_space}-{module_name}"
+name = "None-None"
 version = "0.1.0"
-description = {description}
+description = None
 readme = "README.md"
 authors = [
   { name="Sisung Kim", email="sisung.kim1@gmail.com" },
@@ -26,5 +26,5 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.urls]
-"Homepage" = "https://github.com/crimson206/{module_name}"
-"Bug Tracker" = "https://github.com/crimson206/{module_name}/issues"
+"Homepage" = "https://github.com/crimson206/None"
+"Bug Tracker" = "https://github.com/crimson206/None/issues"

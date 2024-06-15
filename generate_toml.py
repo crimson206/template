@@ -1,4 +1,5 @@
-# region
+# region Pre-Defined
+
 
 from pydantic import BaseModel
 from crimson.templator import format_insert
@@ -33,7 +34,6 @@ requires-python = ">=3.9"
 [project.urls]
 "Homepage" = "https://github.com/\[github_id\]/\[module_name\]"
 "Bug Tracker" = "https://github.com/\[github_id\]/\[module_name\]/issues"
-\[discussion_block\]
 '''
 
 
@@ -61,24 +61,38 @@ def add_options(template: str, options: Options) -> str:
 # endregion
 
 
-template = add_options(
-    template,
-    options=Options(
-        discussion=False
-    )
+# ******************************************************
+# region User Setup
+
+
+options = Options(
+    # Will you use the discussion session in your repo?
+    discussion=False
 )
 
-name_space = "None",
-module_name = "None",
-description = "None",
-
-
-
-pyproject_body = format_insert(
-    template,
-    kwargs=Kwargs(
-        name_space=name_space,
-        module_name=module_name,
-        description=description,
-    )
+# Define the general information of your package
+kwargs = Kwargs(
+    name_space="None",
+    module_name="None",
+    description="None",
 )
+
+# endregion
+
+# ******************************************************
+# region Execution
+
+template: str = add_options(
+    template,
+    options=options
+)
+
+pyproject_body: str = format_insert(
+    template,
+    **kwargs.model_dump()
+)
+
+with open('pyproject.toml', "w") as file:
+    file.write(pyproject_body)
+
+# endregion
