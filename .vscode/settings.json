@@ -1,0 +1,8 @@
+{
+    "editor.foldingStrategy": "indentation",
+    "editor.foldRegions": {
+        "start": "^\\s*#\\s*region\\b",
+        "end": "^\\s*#\\s*endregion\\b"
+    },
+    "editor.defaultFoldingImportLevel": 2
+}

@@ -1,0 +1,10 @@
+# .flake8
+[flake8]
+
+# E203: Whitespace before ':'
+# E501: Line too long (79 characters)
+# W503: Line break before binary operator
+# W605: Invalid escape sequence
+
+# W605: To use the crimson-templator module
+ignore = E501, W605
