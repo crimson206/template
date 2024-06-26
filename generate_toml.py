@@ -64,7 +64,8 @@ def add_options(template: str, options: Options) -> str:
 # region Utils
 
 
-def create_skeleton(name_space, module_name):
+def create_skeleton(name_space:str, module_name:str):
+    module_name = module_name.replace('-', '_')
     os.makedirs(f"src/{name_space}/{module_name}", exist_ok=True)
     with open(f"src/{name_space}/{module_name}/__init__.py", "w") as f:
         f.write("# Init file for the module")
@@ -111,6 +112,8 @@ options = Options(
     # Will you use the discussion session in your repo?
     discussion=False
 )
+
+
 
 # Define the general information of your package
 kwargs = Kwargs(
