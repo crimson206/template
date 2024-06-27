@@ -80,6 +80,8 @@ conda create --name \[module_name\] python=$PYTHON_VERSION -y
 conda activate \[module_name\]
 
 pip install -r requirements.txt
+pip install -r requirements_test.txt
+pip install -r requirements_dev.txt
 
 '''
 
