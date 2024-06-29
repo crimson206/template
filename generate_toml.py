@@ -119,10 +119,13 @@ options = Options(
 
 # Define the general information of your package
 kwargs = Kwargs(
-    name_space="crimson",
-    module_name="code-extractor",
-    description="From source code, extract useful information.",
+    name_space="crimson-templator",
+    module_name="requirements",
+    description="requirements file templates.",
 )
+
+kwargs_skeleton = kwargs
+kwargs_skeleton.name_space = kwargs_skeleton.name.replace('-', '/')
 
 # endregion
 
@@ -146,8 +149,8 @@ generate_toml(
 
 
 create_skeleton(
-    name_space=kwargs.name_space,
-    module_name=kwargs.module_name
+    name_space=kwargs_skeleton.name_space,
+    module_name=kwargs_skeleton.module_name
 )
 
 generate_setup_env_script(
