@@ -124,7 +124,7 @@ kwargs = Kwargs(
     description="requirements file templates.",
 )
 
-kwargs_skeleton = kwargs
+kwargs_skeleton = kwargs.model_copy ()
 kwargs_skeleton.name_space = kwargs_skeleton.name_space.replace('-', '/')
 
 # endregion
