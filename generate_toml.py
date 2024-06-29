@@ -125,7 +125,7 @@ kwargs = Kwargs(
 )
 
 kwargs_skeleton = kwargs
-kwargs_skeleton.name_space = kwargs_skeleton.name.replace('-', '/')
+kwargs_skeleton.name_space = kwargs_skeleton.name_space.replace('-', '/')
 
 # endregion
 
