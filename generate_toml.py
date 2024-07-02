@@ -104,6 +104,10 @@ def generate_toml(pyproject_body):
     with open('pyproject.toml', "w") as file:
         file.write(pyproject_body)
 
+def empty_readme():
+    with open('README.md', "w") as file:
+        file.write("Not valid yet.")
+
 # endregion
 
 # ******************************************************
@@ -114,7 +118,6 @@ options = Options(
     # Will you use the discussion session in your repo?
     discussion=False
 )
-
 
 
 # Define the general information of your package
@@ -157,5 +160,7 @@ generate_setup_env_script(
     module_name=kwargs.module_name, 
     setup_env_template=setup_env_template
 )
+
+empty_readme()
 
 # endregion
