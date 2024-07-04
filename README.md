@@ -53,6 +53,42 @@ steps
 - activate the environment.
 - install requirements.txt
 
+#### Generate Private Env
+Generate a private repository in this repo.
+I recommend you to write all the unstructured codes in this repo.
+
+``` bash
+source scripts/generate_dev_repo.sh
+```
+
+It will ask you the name of your repo, and then, generate a repo named f'{your_repo_name}-dev'.
+
+**Usage Tip**
+
+If you wrote your codes in a wrong branch,
+- backup the files to the dev repo
+- remove changes in your main(not main branch) repo
+- move to your correct branch
+- place back the backup codes
+
+
 ## Workflows
 
-Not documented yet.
+I currently setup test and release workflows.
+
+**Test**
+
+If you make a PR with the patterns [ main, develop, 'release/*', 'feature/*' ],
+
+It will perform your unittest in ["3.9", "3.10", "3.11"]
+
+**Release**
+
+required secret : PYPI_API_TOKEN
+
+I usually make PRs only when I start release branches.
+release workflow is not conducted automatically. If you think your branch is ready to be published, 
+
+- go to https://github.com/{github_id}/{repo_name}/actions/workflows/release.yaml
+- find the button, 'Run workflow'
+- select the branch to publish. In my case, release/x.x.x
