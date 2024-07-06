@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from crimson.templator import format_insert, format_indent, format_insert_loop
 from typing import List
 
-topics_t = r'''"Topic :: Software Development :: \\[topic\\]",
+topics_t = r'''"\\[topic\\]",
 '''
 
 dependencies_t = r"""\\[dependency\\],
@@ -147,9 +147,11 @@ kwargs = Kwargs(
     name_space="crimson-templator",
     module_name="requirements",
     description="requirements file templates.",
-    topics=["write", "your", "tags"],
+    # https://pypi.org/classifiers/
+    topics=["Topic :: Software Development :: Libraries :: Python Modules"],
     dependencies=["pydantic"]
 )
+
 
 kwargs_skeleton = kwargs.model_copy()
 kwargs_skeleton.name_space = kwargs_skeleton.name_space.replace("-", "/")

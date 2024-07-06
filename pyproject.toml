@@ -12,7 +12,7 @@ authors = [
 ]
 
 classifiers = [
-    "Development Status :: Pre-Alpha",
+    "Development Status :: Beta",
 
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
@@ -21,9 +21,7 @@ classifiers = [
 
     "Intended Audience :: Developers",
 
-    "Topic :: Software Development :: write",
-    "Topic :: Software Development :: your",
-    "Topic :: Software Development :: tags",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
