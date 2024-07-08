@@ -144,9 +144,9 @@ options = Options(
 # Define the general information of your package
 kwargs = Kwargs(
     version="0.1.0",
-    name_space="crimson-templator",
-    module_name="requirements",
-    description="requirements file templates.",
+    name_space="crimson",
+    module_name="package-name",
+    description="Your package description.",
     # https://pypi.org/classifiers/
     topics=["Topic :: Software Development :: Libraries :: Python Modules"],
     dependencies=["pydantic"]
