@@ -186,6 +186,5 @@ generate_setup_env_script(
     module_name=kwargs.module_name, setup_env_template=setup_env_template
 )
 
-empty_readme()
 
 # endregion
