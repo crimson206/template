@@ -8,8 +8,8 @@ from typing import List
 topics_t = r'''"\\[topic\\]",
 '''
 
-dependencies_t = r"""\\[dependency\\],
-"""
+dependencies_t = r'''"\\[dependency\\]",
+'''
 
 template = r"""[build-system]
 requires = ["setuptools>=61.0.0", "wheel"]
@@ -149,7 +149,9 @@ kwargs = Kwargs(
     description="Your package description.",
     # https://pypi.org/classifiers/
     topics=["Topic :: Software Development :: Libraries :: Python Modules"],
-    dependencies=["pydantic"]
+    dependencies=[
+        "crimson-intelli-type>=0.3,<0.4"
+    ]
 )
 
 
