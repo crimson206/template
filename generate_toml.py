@@ -5,11 +5,11 @@ from pydantic import BaseModel
 from crimson.templator import format_insert, format_indent, format_insert_loop
 from typing import List
 
-topics_t = r'''"\\[topic\\]",
-'''
+topics_t = r""""\\[topic\\]",
+"""
 
-dependencies_t = r'''"\\[dependency\\]",
-'''
+dependencies_t = r""""\\[dependency\\]",
+"""
 
 template = r"""[build-system]
 requires = ["setuptools>=61.0.0", "wheel"]
@@ -129,6 +129,12 @@ def empty_readme():
         file.write("Not valid yet.")
 
 
+def generate_requirements(dependencies_f: str):
+    dependencies_f = dependencies_f.replace('"', "")
+    with open("requirements.txt", "w") as file:
+        file.write(dependencies_f)
+
+
 # endregion
 
 # ******************************************************
@@ -149,9 +155,7 @@ kwargs = Kwargs(
     description="Your package description.",
     # https://pypi.org/classifiers/
     topics=["Topic :: Software Development :: Libraries :: Python Modules"],
-    dependencies=[
-        "crimson-intelli-type>=0.3,<0.4"
-    ]
+    dependencies=["crimson-intelli-type>=0.3,<0.4"],
 )
 
 
@@ -168,7 +172,9 @@ template: str = add_options(template, options=options)
 pyproject_body: str = format_insert(template, **kwargs.model_dump())
 
 topics_f: str = format_insert_loop(topics_t, kwargs={"topic": kwargs.topics})
-dependencies_f: str = format_insert_loop(dependencies_t, kwargs={"dependency": kwargs.dependencies})
+dependencies_f: str = format_insert_loop(
+    dependencies_t, kwargs={"dependency": kwargs.dependencies}
+)
 
 pyproject_body: str = format_indent(
     pyproject_body,
@@ -188,5 +194,6 @@ generate_setup_env_script(
     module_name=kwargs.module_name, setup_env_template=setup_env_template
 )
 
+generate_requirements(dependencies_f)
 
 # endregion
