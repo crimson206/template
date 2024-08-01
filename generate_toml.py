@@ -130,7 +130,7 @@ def empty_readme():
 
 
 def generate_requirements(dependencies_f: str):
-    dependencies_f = dependencies_f.replace('"', "")
+    dependencies_f = dependencies_f.replace('"', "").replace(',', "")
     with open("requirements.txt", "w") as file:
         file.write(dependencies_f)
 
