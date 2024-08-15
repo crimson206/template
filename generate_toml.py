@@ -25,12 +25,13 @@ authors = [
 ]
 
 classifiers = [
-    "Development Status :: Pre-Alpha",
+    "Development Status :: 2 - Pre-Alpha",
 
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 
     "Intended Audience :: Developers",
 
@@ -175,9 +176,9 @@ template: str = add_options(template, options=options)
 
 pyproject_body: str = format_insert(template, **kwargs.model_dump())
 
-topics_f: str = format_insert_loop(topics_t, kwargs={"topic": kwargs.topics})
+topics_f: str = format_insert_loop(topics_t, kwargs_list={"topic": kwargs.topics})
 dependencies_f: str = format_insert_loop(
-    dependencies_t, kwargs={"dependency": kwargs.dependencies}
+    dependencies_t, kwargs_list={"dependency": kwargs.dependencies}
 )
 
 pyproject_body: str = format_indent(
