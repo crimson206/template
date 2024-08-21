@@ -125,11 +125,6 @@ def generate_toml(pyproject_body):
         file.write(pyproject_body)
 
 
-def empty_readme():
-    with open("README.md", "w") as file:
-        file.write("Not valid yet.")
-
-
 def generate_requirements(dependencies_f: str):
     dependencies_f = dependencies_f.replace('"', "").replace(',', "")
     with open("requirements.txt", "w") as file:
