@@ -4,12 +4,12 @@ import os
 from pydantic import BaseModel
 from crimson.templator import format_insert, format_indent, format_insert_loop
 from typing import List
+import shutil
 
 topics_t = r""""\\[topic\\]",
 """
 
-dependencies_t = r""""\\[dependency\\]",
-"""
+dependencies_t = r'"\\[dependency\\]",'
 
 template = r"""[build-system]
 requires = ["setuptools>=61.0.0", "wheel"]
@@ -84,10 +84,16 @@ def add_options(template: str, options: Options) -> str:
 # region Utils
 
 
-def create_skeleton(name_space: str, module_name: str):
+def create_skeleton(name_space: str, module_name: str, base_dir: str) -> None:
     module_name = module_name.replace("-", "_")
-    os.makedirs(f"src/{name_space}/{module_name}", exist_ok=True)
-    with open(f"src/{name_space}/{module_name}/__init__.py", "w") as f:
+
+    path = os.path.join(
+        base_dir,
+        f"src/{name_space}/{module_name}",
+    )
+
+    os.makedirs(path, exist_ok=True)
+    with open(f"{path}/__init__.py", "w") as f:
         f.write("# Init file for the module")
 
 
@@ -106,8 +112,13 @@ pip install -r requirements_dev.txt
 """
 
 
-def generate_setup_env_script(module_name, setup_env_template):
-    with open("scripts/setup_env.sh", "w") as file:
+def generate_setup_env_script(module_name, setup_env_template, base_dir: str) -> None:
+    dir = os.path.join(base_dir, "scripts")
+
+    os.makedirs(dir, exist_ok=True)
+    path = f"{dir}/setup_env.sh"
+
+    with open(path, "w") as file:
         script = format_insert(
             setup_env_template, module_name=module_name, bin_bash="# !bin/bash"
         )
@@ -117,18 +128,81 @@ def generate_setup_env_script(module_name, setup_env_template):
         f"Now, you can access the module name {module_name} in your terminal by $MODULE_NAME"
     )
     print("To generate an conda env for your new module, run following command.")
-    print("source scripts/setup_env.sh")
+    print(f"source {path}")
 
 
-def generate_toml(pyproject_body):
-    with open("pyproject.toml", "w") as file:
+def generate_requirements(dependencies_f: str, base_dir: str):
+    os.makedirs(base_dir, exist_ok=True)
+
+    dependencies_f = dependencies_f.replace('"', "").replace(",", "")
+    with open(f"{base_dir}/requirements.txt", "w") as file:
+        file.write(dependencies_f)
+
+
+def generate_toml(template: str, kwargs: Kwargs, base_dir: str):
+
+    template: str = add_options(template, options=options)
+
+    pyproject_body: str = format_insert(template, **kwargs.model_dump())
+
+    topics_f: str = format_insert_loop(topics_t, kwargs_list={"topic": kwargs.topics})
+    dependencies_f: str = format_insert_loop(
+        dependencies_t, kwargs_list={"dependency": kwargs.dependencies}
+    )
+
+    if dependencies_f == '"",':
+        dependencies_f = ""
+
+    pyproject_body: str = format_indent(
+        pyproject_body,
+        topics_f=topics_f,
+        dependencies_f=dependencies_f,
+    )
+
+    os.makedirs(base_dir, exist_ok=True)
+
+    path = os.path.join(base_dir, "pyproject.toml")
+
+    with open(path, "w") as file:
         file.write(pyproject_body)
 
 
-def generate_requirements(dependencies_f: str):
-    dependencies_f = dependencies_f.replace('"', "").replace(',', "")
-    with open("requirements.txt", "w") as file:
-        file.write(dependencies_f)
+def copy_and_paste_extra_requirements(base_dir):
+    files = ["requirements_dev.txt", "requirements_test.txt"]
+
+    for file in files:
+        dest = os.path.join(base_dir, file)
+        shutil.copy(file, dest)
+
+
+def build_setup(template: str, kwargs: Kwargs, base_dir: str) -> None:
+
+    kwargs_skeleton = kwargs.model_copy()
+    kwargs_skeleton.name_space = kwargs_skeleton.name_space.replace("-", "/")
+    dependencies_f: str = format_insert_loop(
+        dependencies_t, kwargs_list={"dependency": kwargs.dependencies}
+    )
+
+    generate_toml(template=template, kwargs=kwargs, base_dir=base_dir)
+
+    create_skeleton(
+        name_space=kwargs_skeleton.name_space,
+        module_name=kwargs_skeleton.module_name,
+        base_dir=base_dir,
+    )
+
+    generate_setup_env_script(
+        module_name=kwargs.module_name,
+        setup_env_template=setup_env_template,
+        base_dir=base_dir,
+    )
+
+    generate_requirements(
+        dependencies_f=dependencies_f,
+        base_dir=base_dir,
+    )
+
+    copy_and_paste_extra_requirements(base_dir)
 
 
 # endregion
@@ -142,57 +216,36 @@ options = Options(
     discussion=False
 )
 
-dependencies = [
-]
+dependencies = """
 
+"""
+
+
+def split_dependencies(dependencies: str):
+    return dependencies.strip().split("\n")
+
+
+dependencies = split_dependencies(dependencies)
 
 # Define the general information of your package
 kwargs = Kwargs(
     version="0.1.0",
     name_space="crimson",
-    module_name="package-name",
+    module_name="test-package",
     description="Your package description.",
-    # https://pypi.org/classifiers/
     topics=["Topic :: Software Development :: Libraries :: Python Modules"],
     dependencies=dependencies,
 )
 
-
-kwargs_skeleton = kwargs.model_copy()
-kwargs_skeleton.name_space = kwargs_skeleton.name_space.replace("-", "/")
 
 # endregion
 
 # ******************************************************
 # region Execution
 
-template: str = add_options(template, options=options)
 
-pyproject_body: str = format_insert(template, **kwargs.model_dump())
+build_setup(template, kwargs, base_dir="stable")
 
-topics_f: str = format_insert_loop(topics_t, kwargs_list={"topic": kwargs.topics})
-dependencies_f: str = format_insert_loop(
-    dependencies_t, kwargs_list={"dependency": kwargs.dependencies}
-)
+kwargs.module_name = kwargs.module_name + "-beta"
 
-pyproject_body: str = format_indent(
-    pyproject_body,
-    topics_f=topics_f,
-    dependencies_f=dependencies_f,
-)
-
-
-generate_toml(pyproject_body=pyproject_body)
-
-
-create_skeleton(
-    name_space=kwargs_skeleton.name_space, module_name=kwargs_skeleton.module_name
-)
-
-generate_setup_env_script(
-    module_name=kwargs.module_name, setup_env_template=setup_env_template
-)
-
-generate_requirements(dependencies_f)
-
-# endregion
+build_setup(template, kwargs, base_dir="beta")
