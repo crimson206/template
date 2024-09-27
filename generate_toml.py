@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from crimson.templator import format_insert, format_indent, format_insert_loop
 from typing import List
 import shutil
+import json
 
 topics_t = r""""\\[topic\\]",
 """
@@ -48,8 +49,8 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.urls]
-"Homepage" = "https://github.com/\[github_id\]/\[module_name\]"
-"Bug Tracker" = "https://github.com/\[github_id\]/\[module_name\]/issues"
+"Homepage" = "https://github.com/\[github_id\]/\[repo_name\]"
+"Bug Tracker" = "https://github.com/\[github_id\]/\[repo_name\]/issues"
 """
 
 
@@ -57,6 +58,7 @@ class Kwargs(BaseModel):
     name: str = "Sisung Kim"
     email: str = "sisung.kim1@gmail.com"
     github_id: str = "crimson206"
+    repo_name: str
     version: str
     name_space: str
     module_name: str
@@ -208,6 +210,17 @@ def build_setup(template: str, kwargs: Kwargs, base_dir: str) -> None:
     copy_and_paste_extra_requirements(base_dir)
 
 
+def generate_repo_info(github_id: str, repo_name: str, **kwarg_safe) -> None:
+    info_to_env_json = {
+        "repo-folder-root": f"https://github.com/{github_id}/{repo_name}/blob/main/"
+    }
+
+    json_string = json.dumps(info_to_env_json, indent=2)
+
+    os.makedirs("env", exist_ok=True)
+    open("env/env.json", "w").write(json_string)
+
+
 # endregion
 
 # ******************************************************
@@ -231,7 +244,13 @@ def split_dependencies(dependencies: str):
 dependencies = split_dependencies(dependencies)
 
 # Define the general information of your package
+
+
 kwargs = Kwargs(
+    name="Sisung Kim",
+    email="sisung.kim1@gmail.com",
+    github_id="crimson206",
+    repo_name="template",
     version="0.1.0",
     name_space="crimson",
     module_name="test-package",
@@ -252,3 +271,5 @@ build_setup(template, kwargs, base_dir="stable")
 kwargs.module_name = kwargs.module_name + "-beta"
 
 build_setup(template, kwargs, base_dir="beta")
+
+generate_repo_info(**kwargs.model_dump())
