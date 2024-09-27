@@ -112,7 +112,9 @@ pip install -r requirements_dev.txt
 """
 
 
-def generate_setup_env_script(module_name, setup_env_template, base_dir: str) -> None:
+def generate_setup_env_script(
+    module_name: str, setup_env_template: str, base_dir: str
+) -> None:
     dir = os.path.join(base_dir, "scripts")
 
     os.makedirs(dir, exist_ok=True)
@@ -128,7 +130,8 @@ def generate_setup_env_script(module_name, setup_env_template, base_dir: str) ->
         f"Now, you can access the module name {module_name} in your terminal by $MODULE_NAME"
     )
     print("To generate an conda env for your new module, run following command.")
-    print(f"source {path}")
+    print(f"cd {base_dir}")
+    print("source scripts/setup_env.sh")
 
 
 def generate_requirements(dependencies_f: str, base_dir: str):
@@ -167,7 +170,7 @@ def generate_toml(template: str, kwargs: Kwargs, base_dir: str):
         file.write(pyproject_body)
 
 
-def copy_and_paste_extra_requirements(base_dir):
+def copy_and_paste_extra_requirements(base_dir: str):
     files = ["requirements_dev.txt", "requirements_test.txt"]
 
     for file in files:
