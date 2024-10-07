@@ -245,15 +245,16 @@ dependencies = split_dependencies(dependencies)
 
 # Define the general information of your package
 
+repo_name = module_name = "module_name"
 
 kwargs = Kwargs(
     name="Sisung Kim",
     email="sisung.kim1@gmail.com",
     github_id="crimson206",
-    repo_name="template",
+    repo_name=repo_name,
     version="0.1.0",
     name_space="crimson",
-    module_name="test-package",
+    module_name=module_name,
     description="Your package description.",
     topics=["Topic :: Software Development :: Libraries :: Python Modules"],
     dependencies=dependencies,
