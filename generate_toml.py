@@ -267,10 +267,5 @@ kwargs = Kwargs(
 # region Execution
 
 
-build_setup(template, kwargs, base_dir="stable")
+build_setup(template, kwargs, base_dir=".")
 
-kwargs.module_name = kwargs.module_name + "-beta"
-
-build_setup(template, kwargs, base_dir="beta")
-
-generate_repo_info(**kwargs.model_dump())
