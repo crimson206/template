@@ -207,7 +207,7 @@ def build_setup(template: str, kwargs: Kwargs, base_dir: str) -> None:
         base_dir=base_dir,
     )
 
-    copy_and_paste_extra_requirements(base_dir)
+    # copy_and_paste_extra_requirements(base_dir)
 
 
 def generate_repo_info(github_id: str, repo_name: str, **kwarg_safe) -> None:
